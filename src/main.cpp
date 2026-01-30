@@ -9,11 +9,14 @@
 #include "led.h"
 #include "board.h"
 
-static const int LED_PIN = 6;
+constexpr int64_t kSerialBaudRate = 115200;
 
 void setup()
 {
-  Serial.begin(115200);
+  board::disableRadio();
+  board::setCPUFrequency();
+
+  Serial.begin(kSerialBaudRate);
   led::init();
 
   delay(1000);
@@ -27,14 +30,14 @@ void loop()
   led::operate();
 
   // demo error state toggle
-  if (board::now() > 10000)
+  if (board::now() > 10000 && board::now() < 20000)
   {
-    // Simulate error after 30 seconds
+    // Simulate error after 10 seconds
     led::setErrorState(true);
   }
-  if (board::now() > 20000)
+  else
   {
-    // Simulate error after 30 seconds
+    // Simulate error after 10 seconds
     led::setErrorState(false);
   }
 
