@@ -5,20 +5,15 @@
 #include "esp_spi_flash.h"
 
 #include "info.h"
-
-#include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
-
-#ifndef LED_PIN
-#define LED_PIN 48 // podle desky z Dratek.cz
-#endif
+#include "neoled.h"
 
 void setup()
 {
   Serial.begin(115200);
-  delay(10000);
+  delay(1000);
 
-  printBoardInfo();
+  board::printInfo();
+  neoled::Off();
 }
 
 void loop()

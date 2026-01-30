@@ -3,8 +3,12 @@
 
 #include <Arduino.h>
 
-// Print a concise diagnostic report (chip + memory + build info) to Serial.
-// Call from setup() after Serial.begin().
-void printBoardInfo();
+// Board/system diagnostics helpers.
+namespace board
+{
+    // Print a concise diagnostic report (chip + memory + build info) to Serial.
+    // Call from setup() after Serial.begin().
+    void printInfo();
+}
 
 #endif // INFO_H

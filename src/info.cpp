@@ -57,12 +57,16 @@ namespace
     }
 } // namespace
 
-void printBoardInfo()
+// Public diagnostics API.
+namespace board
 {
-    // Overall diagnostics header with build information.
-    Serial.println("\n\n========== ESP32 DIAGNOSTICS ==========");
-    Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
+    void printInfo()
+    {
+        // Overall diagnostics header with build information.
+        Serial.println("\n\n========== ESP32 DIAGNOSTICS ==========");
+        Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
-    printChipInfo();
-    printMemoryInfo();
+        printChipInfo();
+        printMemoryInfo();
+    }
 }
