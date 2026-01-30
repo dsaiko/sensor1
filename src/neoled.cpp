@@ -15,7 +15,7 @@ namespace
 
 namespace neoled
 {
-    void Off()
+    void off()
     {
         // Ensure the LED is initialized before turning it off.
         led.begin();

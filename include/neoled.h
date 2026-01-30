@@ -6,7 +6,7 @@ namespace neoled
 {
     // Initialize the NeoPixel and turn it off (clear + show).
     // Uses the default pin defined by NEOLED_PIN unless overridden.
-    void Off();
+    void off();
 }
 
 #endif // NEOLED_H
