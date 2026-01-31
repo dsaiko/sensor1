@@ -4,6 +4,11 @@
 #include <cstdint>
 
 // SparkFun SCD4x (SCD41) sensor interface.
+//
+// Usage:
+// - Call init() once after I2C (`Wire`) is configured.
+// - Call loop() frequently; it updates cached readings when new data is ready.
+// - Read the latest values via getters.
 namespace sensor
 {
     // Initialize the sensor and start periodic measurements.

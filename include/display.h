@@ -2,6 +2,9 @@
 #define DISPLAY_H
 
 // OLED display rendering (SSD1306 128x64 over I2C via U8g2).
+//
+// The implementation performs minor anti burn-in pixel shifting and only redraws
+// the screen when values change.
 namespace display
 {
     // Initialize the display. Requires I2C (`Wire`) to be initialized first.

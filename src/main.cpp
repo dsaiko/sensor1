@@ -16,7 +16,7 @@ constexpr int kI2cSdaPin = pins::kI2cSda;
 constexpr int kI2cSclPin = pins::kI2cScl;
 constexpr uint32_t kI2cClockHz = 100000; // Standard-mode I2C (100 kHz)
 
-constexpr int kMaxCO2ppm = 1500;
+constexpr int kMaxCO2ppm = 2000;
 
 // Power tuning
 #ifndef POWER_LOOP_INTERVAL_MS

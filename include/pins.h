@@ -12,6 +12,7 @@
 // - LED_GREEN_PIN
 // - LED_RED_PIN
 // - NEOLED_PIN
+// - BEEPER_PIN
 
 #ifndef I2C_SDA_PIN
 #error "Missing build flag: -DI2C_SDA_PIN=<gpio>"
