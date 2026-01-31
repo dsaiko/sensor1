@@ -78,6 +78,13 @@ Note: light sleep has the biggest effect when the main loop interval is longer (
 - Upload: `platformio run --target upload`
 - Serial monitor: `platformio device monitor`
 
+## Testing (PlatformIO Unit Test Runner)
+
+This project includes a small Unity-based test suite under `test/`.
+
+- Run tests (requires a connected ESP32-S3 board): `platformio test -e esp32-s3-n16r8`
+- Show more output: `platformio test -e esp32-s3-n16r8 -v`
+
 ## Project structure
 
 - `src/main.cpp` – main application
