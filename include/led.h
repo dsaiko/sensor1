@@ -8,7 +8,7 @@ namespace led
     void init();
 
     // Run the LED state machine. Call frequently from loop().
-    void operate();
+    void run();
 
     // Enable/disable the error state (solid red LED).
     void setErrorState(bool isError);

@@ -1,8 +1,6 @@
 #ifndef INFO_H
 #define INFO_H
 
-#include <Arduino.h>
-
 // Board/system diagnostics helpers.
 namespace board
 {
