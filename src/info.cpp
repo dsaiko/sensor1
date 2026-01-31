@@ -1,9 +1,10 @@
-#include <Arduino.h>
-
 #include "info.h"
 
 #include "esp_chip_info.h"
 #include "esp_system.h"
+
+#include <Arduino.h>
+#include <Wire.h>
 
 namespace
 {
@@ -35,10 +36,10 @@ namespace
         Serial.printf("PSRAM free: %u bytes\n", ESP.getFreePsram());
 
         const uint64_t mac = ESP.getEfuseMac();
-        Serial.printf("eFuse MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                      static_cast<uint8_t>(mac >> 40), static_cast<uint8_t>(mac >> 32),
-                      static_cast<uint8_t>(mac >> 24), static_cast<uint8_t>(mac >> 16),
-                      static_cast<uint8_t>(mac >> 8), static_cast<uint8_t>(mac));
+        Serial.printf("eFuse MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", static_cast<uint8_t>(mac >> 40),
+                      static_cast<uint8_t>(mac >> 32), static_cast<uint8_t>(mac >> 24),
+                      static_cast<uint8_t>(mac >> 16), static_cast<uint8_t>(mac >> 8),
+                      static_cast<uint8_t>(mac));
 
         Serial.printf("Reset reason (CPU0): %d\n", esp_reset_reason());
     }
@@ -55,6 +56,35 @@ namespace
         Serial.printf("Sketch size: %u\n", ESP.getSketchSize());
         Serial.printf("Free sketch space: %u\n", ESP.getFreeSketchSpace());
     }
+
+    // List I2C devices on the bus.
+    void printI2CInfo()
+    {
+        Serial.println("\n=== I2C ===");
+
+        uint8_t count = 0;
+
+        for (uint8_t addr = 0x03; addr <= 0x77; addr++)
+        {
+            Wire.beginTransmission(addr);
+            const uint8_t err = Wire.endTransmission();
+
+            if (err == 0)
+            {
+                Serial.printf("I2C device found at 0x%02X\n", addr);
+                count++;
+            }
+        }
+
+        if (count == 0)
+        {
+            Serial.println("No I2C devices found.");
+        }
+        else
+        {
+            Serial.printf("I2C devices found: %u\n", count);
+        }
+    }
 } // namespace
 
 // Public diagnostics API.
@@ -68,5 +98,6 @@ namespace board
 
         printChipInfo();
         printMemoryInfo();
+        printI2CInfo();
     }
-}
+} // namespace board

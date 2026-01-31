@@ -1,0 +1,16 @@
+# Formatting guidance for this project.
+# Apply with: clang-format -i src/*.cpp include/*.h
+
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: Inline
+DerivePointerAlignment: false
+PointerAlignment: Left
+SortIncludes: true
+IncludeBlocks: Regroup
+NamespaceIndentation: All

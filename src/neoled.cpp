@@ -1,26 +1,22 @@
 #include "neoled.h"
 
-#include <Adafruit_NeoPixel.h>
+#include "pins.h"
 
-// Default pin can be overridden at build time.
-#ifndef NEOLED_PIN
-#define NEOLED_PIN 48
-#endif
+#include <Adafruit_NeoPixel.h>
 
 namespace
 {
-    constexpr uint8_t kNeoLedPin = NEOLED_PIN;
-    Adafruit_NeoPixel led(1, kNeoLedPin, NEO_GRB + NEO_KHZ800);
+    Adafruit_NeoPixel neoPixel(1, pins::kNeoPixel, NEO_GRB + NEO_KHZ800);
 } // namespace
 
 namespace neoled
 {
-    void Off()
+    void off()
     {
         // Ensure the LED is initialized before turning it off.
-        led.begin();
-        led.setBrightness(0);
-        led.clear();
-        led.show();
+        neoPixel.begin();
+        neoPixel.setBrightness(0);
+        neoPixel.clear();
+        neoPixel.show();
     }
-}
+} // namespace neoled
