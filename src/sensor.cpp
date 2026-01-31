@@ -53,7 +53,7 @@ namespace sensor
         }
     }
 
-    void run()
+    void loop()
     {
         const int64_t nowMs = board::now();
         if (nowMs - lastPollAtMs < kSensorPollPeriodMs)

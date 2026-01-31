@@ -11,7 +11,7 @@ namespace sensor
     void init();
 
     // Poll the sensor and update cached readings when new data is available.
-    void run();
+    void loop();
 
     // Latest CO2 concentration in ppm.
     uint16_t getCO2();

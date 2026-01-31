@@ -8,7 +8,7 @@ namespace display
     void init();
 
     // Draw the current values to the screen. Call frequently from loop().
-    void draw();
+    void loop();
 
     // Update sensor values that will be displayed.
     void setValues(int temperature, int humidity, int co2);

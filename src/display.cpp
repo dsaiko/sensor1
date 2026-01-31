@@ -65,7 +65,7 @@ namespace display
         co2SensorValue = co2;
     }
 
-    void draw()
+    void loop()
     {
         // Store previous values to detect changes
         static int lastT = -1;

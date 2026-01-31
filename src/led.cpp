@@ -1,26 +1,32 @@
 #include "led.h"
 
 #include "board.h"
+#include "pins.h"
 
 #include <Arduino.h>
 
 namespace
 {
     // Heartbeat timing: brief green flash every period when healthy.
-    constexpr int64_t kControlLedPeriodMs = 3000;
-    constexpr int64_t kControlLedFlashMs = 50;
+    constexpr int kControlLedPeriodMs = 5000;
+    constexpr int kControlLedFlashMs = 50;
+
+    constexpr int beepFrequency = 2500; // Hz
+    constexpr int beepDurationMs = 50;  // milliseconds
+    constexpr int beepPeriodMs = 5000;  // milliseconds
 
     // GPIO pins for the onboard status LEDs.
-    constexpr uint8_t kLedGreenPin = 6;
-    constexpr uint8_t kLedRedPin = 7;
+    constexpr int kLedGreenPin = pins::kLedGreen;
+    constexpr int kLedRedPin = pins::kLedRed;
+    constexpr int kBeeperPin = pins::kBeeper;
 
     // Timing state for the heartbeat LED.
-    int64_t controlLedOnUntil = 0;
     int64_t lastControlLedBlink = 0;
 
     // Tracks whether the system is in error state.
     bool errorState = false;
 
+    int64_t lastBeep = 0;
 } // namespace
 
 namespace led
@@ -33,32 +39,36 @@ namespace led
 
         pinMode(kLedRedPin, OUTPUT);
         digitalWrite(kLedRedPin, LOW);
+
+        pinMode(kBeeperPin, OUTPUT);
+        digitalWrite(kBeeperPin, LOW);
     }
 
-    void run()
+    void loop()
     {
-        // In error state we keep the red LED on and suppress the heartbeat.
-        if (errorState)
-        {
-            return;
-        }
-
         // board::now() is expected to return milliseconds since boot.
         const int64_t now = board::now();
 
-        // Turn off LED after flash duration
-        if (controlLedOnUntil != 0 && now >= controlLedOnUntil)
+        // In error state we keep the red LED on and suppress the heartbeat.
+        if (errorState)
         {
-            digitalWrite(kLedGreenPin, LOW);
-            controlLedOnUntil = 0;
+            if (now - lastBeep >= beepPeriodMs)
+            {
+                lastBeep = now;
+                tone(kBeeperPin, beepFrequency, beepDurationMs);
+                delay(beepDurationMs);
+                digitalWrite(kBeeperPin, LOW);
+            }
+
+            return;
         }
 
         // Start new flash after period
         if (now - lastControlLedBlink >= kControlLedPeriodMs)
         {
             digitalWrite(kLedGreenPin, HIGH);
-
-            controlLedOnUntil = now + kControlLedFlashMs;
+            delay(kControlLedFlashMs);
+            digitalWrite(kLedGreenPin, LOW);
             lastControlLedBlink = now;
         }
     }
@@ -77,14 +87,12 @@ namespace led
             // Solid red LED; heartbeat off.
             digitalWrite(kLedRedPin, HIGH);
             digitalWrite(kLedGreenPin, LOW);
-            controlLedOnUntil = 0;
         }
         else
         {
-            // Clear red LED (heartbeat resumes on the next run() call).
+            // Clear red LED (heartbeat resumes on the next loop() call).
             digitalWrite(kLedRedPin, LOW);
             digitalWrite(kLedGreenPin, LOW);
-            controlLedOnUntil = 0;
             lastControlLedBlink = 0;
         }
     }
