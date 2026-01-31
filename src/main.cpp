@@ -17,6 +17,23 @@ constexpr uint32_t kI2cClockHz = 100000; // Standard-mode I2C (100 kHz)
 
 constexpr int kMaxCO2ppm = 1500;
 
+// Power tuning
+#ifndef POWER_LOOP_INTERVAL_MS
+#define POWER_LOOP_INTERVAL_MS 1000
+#endif
+
+#ifndef POWER_ENABLE_LIGHT_SLEEP
+#define POWER_ENABLE_LIGHT_SLEEP 1
+#endif
+
+#ifndef POWER_AVOID_SLEEP_WHEN_SERIAL
+#define POWER_AVOID_SLEEP_WHEN_SERIAL 1
+#endif
+
+constexpr uint32_t kLoopIntervalMs = POWER_LOOP_INTERVAL_MS;
+constexpr bool kEnableLightSleepBetweenLoops = (POWER_ENABLE_LIGHT_SLEEP != 0);
+constexpr bool kAvoidSleepWhenSerialConnected = (POWER_AVOID_SLEEP_WHEN_SERIAL != 0);
+
 void setup()
 {
     board::disableRadio();
@@ -56,5 +73,12 @@ void loop()
     display::setValues(temp, hum, co2);
     display::draw();
 
-    delay(500);
+    if (kEnableLightSleepBetweenLoops && (!kAvoidSleepWhenSerialConnected || !Serial))
+    {
+        board::lightSleepMs(kLoopIntervalMs);
+    }
+    else
+    {
+        delay(kLoopIntervalMs);
+    }
 }

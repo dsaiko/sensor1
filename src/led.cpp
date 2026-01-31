@@ -20,6 +20,7 @@ namespace
 
     // Tracks whether the system is in error state.
     bool errorState = false;
+
 } // namespace
 
 namespace led
@@ -36,6 +37,12 @@ namespace led
 
     void run()
     {
+        // In error state we keep the red LED on and suppress the heartbeat.
+        if (errorState)
+        {
+            return;
+        }
+
         // board::now() is expected to return milliseconds since boot.
         const int64_t now = board::now();
 
@@ -67,13 +74,18 @@ namespace led
         errorState = isError;
         if (errorState)
         {
-            // Solid red LED.
+            // Solid red LED; heartbeat off.
             digitalWrite(kLedRedPin, HIGH);
+            digitalWrite(kLedGreenPin, LOW);
+            controlLedOnUntil = 0;
         }
         else
         {
             // Clear red LED (heartbeat resumes on the next run() call).
             digitalWrite(kLedRedPin, LOW);
+            digitalWrite(kLedGreenPin, LOW);
+            controlLedOnUntil = 0;
+            lastControlLedBlink = 0;
         }
     }
 } // namespace led

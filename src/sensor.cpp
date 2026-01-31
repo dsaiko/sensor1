@@ -10,7 +10,13 @@ namespace
     // Minimum interval between measurement reads.
     // The SCD4x produces new samples at a slower cadence than a tight loop,
     // so we throttle read attempts to keep I2C traffic and logging reasonable.
-    constexpr int64_t kSensorPollPeriodMs = 5000;
+    // In low-power periodic measurement mode, new samples are typically produced
+    // roughly every ~30 seconds. Polling much faster wastes I2C traffic and CPU.
+    constexpr int64_t kSensorPollPeriodMs = 30000;
+
+#ifndef SENSOR_LOG_READINGS
+#define SENSOR_LOG_READINGS 0
+#endif
 
     SCD4x scd41;
 
@@ -62,6 +68,7 @@ namespace sensor
             temperature = static_cast<uint16_t>(scd41.getTemperature());
             humidity = static_cast<uint16_t>(scd41.getHumidity());
 
+#if SENSOR_LOG_READINGS
             Serial.print("CO2(ppm):");
             Serial.print(co2ppm);
 
@@ -72,6 +79,7 @@ namespace sensor
             Serial.print(humidity);
 
             Serial.println();
+#endif
         }
     }
 
