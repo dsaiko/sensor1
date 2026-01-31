@@ -2,6 +2,7 @@
 
 #include "SparkFun_SCD4x_Arduino_Library.h"
 #include "board.h"
+#include "display.h"
 
 #include <Arduino.h>
 
@@ -36,6 +37,7 @@ namespace sensor
         if (!scd41.begin(false, true))
         {
             Serial.println("SCD41 init failed. Check wiring/power and I2C pullups.");
+            display::displayError("SCD41 init failed");
             // Halt in a visible way; caller can't continue without sensor.
             for (;;)
             {

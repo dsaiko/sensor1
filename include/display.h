@@ -15,6 +15,9 @@ namespace display
 
     // Update sensor values that will be displayed.
     void setValues(int temperature, int humidity, int co2);
+
+    // Display an error message (blocking).
+    void displayError(const char* str);
 } // namespace display
 
 #endif // DISPLAY_H

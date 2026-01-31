@@ -21,12 +21,21 @@ namespace board
     void disableRadio()
     {
         // Disable WiFi
-        esp_wifi_stop();
-        esp_wifi_deinit();
+        esp_err_t wifi_stop_err = esp_wifi_stop();
+        // Only deinit WiFi if it was initialized; calling deinit when not
+        // initialized can return ESP_ERR_WIFI_NOT_INIT and is unnecessary.
+        if (wifi_stop_err != ESP_ERR_WIFI_NOT_INIT)
+        {
+            esp_wifi_deinit();
+        }
 
         // Disable Bluetooth
-        esp_bt_controller_disable();
-        esp_bt_controller_deinit();
+        esp_err_t bt_disable_err = esp_bt_controller_disable();
+        // Only deinit Bluetooth controller if it was previously initialized/enabled.
+        if (bt_disable_err != ESP_ERR_INVALID_STATE)
+        {
+            esp_bt_controller_deinit();
+        }
     }
 
     void setCPUFrequency()

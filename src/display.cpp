@@ -1,3 +1,5 @@
+#include "display.h"
+
 #include "board.h"
 
 #include <Arduino.h>
@@ -11,10 +13,8 @@ namespace
     // Anti burn-in settings.
     // Contrast: 0..255, lower reduces OLED power usage.
     constexpr uint8_t kOledContrast = 0;
-    constexpr int64_t kShiftPeriodMs = 5000;   // shift every 5 seconds
-    constexpr int kMaxShiftPx = 7;             // max horizontal+vertical shift in pixels
-    constexpr int64_t kBlankPeriodMs = 90000;  // blank every 90 seconds
-    constexpr int64_t kBlankDurationMs = 1000; // blank duration 1 second
+    constexpr int64_t kShiftPeriodMs = 5000; // shift every 5 seconds
+    constexpr int kMaxShiftPx = 7;           // max horizontal+vertical shift in pixels
 
     constexpr int kDisplayWidth = 128;
     constexpr int kTopLineY = 24;
@@ -119,6 +119,15 @@ namespace display
         u8g2.drawStr((kDisplayWidth - widthC) / 2 + widthCO2,
                      kCO2SubscriptY - kMarginPx - displayShiftPx, "2");
 
+        u8g2.sendBuffer();
+    }
+
+    void displayError(const char* str)
+    {
+        // Redraw display.
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_helvB10_tf);
+        u8g2.drawUTF8(1, kTopLineY, str);
         u8g2.sendBuffer();
     }
 } // namespace display

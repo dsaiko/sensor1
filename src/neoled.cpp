@@ -6,8 +6,7 @@
 
 namespace
 {
-    constexpr int kNeoLedPin = pins::kNeoPixel;
-    Adafruit_NeoPixel neoPixel(1, kNeoLedPin, NEO_GRB + NEO_KHZ800);
+    Adafruit_NeoPixel neoPixel(1, pins::kNeoPixel, NEO_GRB + NEO_KHZ800);
 } // namespace
 
 namespace neoled
