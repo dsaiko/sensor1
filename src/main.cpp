@@ -3,6 +3,7 @@
 #include "info.h"
 #include "led.h"
 #include "neoled.h"
+#include "sensor.h"
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -14,13 +15,15 @@ constexpr int kI2cSdaPin = 9;
 constexpr int kI2cSclPin = 8;
 constexpr uint32_t kI2cClockHz = 100000; // Standard-mode I2C (100 kHz)
 
+constexpr int kMaxCO2ppm = 1500;
+
 void setup()
 {
     board::disableRadio();
     board::setCPUFrequency();
 
     Serial.begin(kSerialBaudRate);
-    delay(50); // Give USB-serial a moment to come up.
+    delay(1000); // Give USB-serial a moment to come up.
 
     // Bring up I2C before initializing any I2C peripherals.
     // Note: internal pullups are weak; prefer external 4.7k pullups to 3.3V.
@@ -34,9 +37,7 @@ void setup()
     neoled::off();
     led::init();
     display::init();
-
-    // Optional: wait for a serial monitor to attach.
-    delay(1000);
+    sensor::init();
 
     board::printInfo();
 }
@@ -44,19 +45,16 @@ void setup()
 void loop()
 {
     led::run();
+    sensor::run();
+
+    uint16_t co2 = sensor::getCO2();
+    uint16_t temp = sensor::getTemperature();
+    uint16_t hum = sensor::getHumidity();
+
+    led::setErrorState(co2 > kMaxCO2ppm);
+
+    display::setValues(temp, hum, co2);
     display::draw();
 
-    // Demo: toggle error state and update values.
-    const int64_t uptimeMs = board::now();
-    if (uptimeMs > 10000 && uptimeMs < 20000)
-    {
-        led::setErrorState(true);
-    }
-    else if (uptimeMs > 20000)
-    {
-        led::setErrorState(false);
-        display::setValues(23, 45, 678);
-    }
-
-    delay(100);
+    delay(500);
 }

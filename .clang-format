@@ -13,3 +13,4 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 SortIncludes: true
 IncludeBlocks: Regroup
+NamespaceIndentation: All

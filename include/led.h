@@ -12,6 +12,6 @@ namespace led
 
     // Enable/disable the error state (solid red LED).
     void setErrorState(bool isError);
-}
+} // namespace led
 
 #endif // LED_H
